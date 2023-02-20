@@ -3,7 +3,7 @@ FROM node:16.18-alpine AS build
 WORKDIR /app
 COPY package*.json /app/
 RUN npm install --force
-RUN npm install -g @angular/cli@latest
+RUN npm install -g @angular/cli@15.1.5
 COPY ./ /app/
 RUN npm run build
 
