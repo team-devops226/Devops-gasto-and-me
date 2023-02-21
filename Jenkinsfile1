@@ -17,9 +17,9 @@ pipeline {
             //stage 3       
         stage("Build Docker Images") {
             steps {
-                 //dir("Devops-gasto-and-me/gasto-and-me-back") {
-                    sh "docker build -t devops-gasto-and-me-angular-app:1.${env.BUILD_NUMBER} ./gasto-and-me-back"
-                //}
+                 dir("Devops-gasto-and-me/gastro-and-me-front") {
+                    sh "docker build -t devops-gasto-and-me-angular-app:1.${env.BUILD_NUMBER} ./gastro-and-me-front"
+                }
                 //sh "docker build -t app_notes:1.${env.BUILD_NUMBER} ./app"
             }
         }
