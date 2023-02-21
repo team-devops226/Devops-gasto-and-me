@@ -13,7 +13,7 @@ pipeline {
         }
         stage("Build application") {
             steps {
-                sh "echo mogui dokh nice"
+                echo "mogui dokh nice"
             }
         }
        
