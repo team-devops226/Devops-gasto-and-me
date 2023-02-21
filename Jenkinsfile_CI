@@ -7,10 +7,17 @@ pipeline {
     }
 
     stages {
+        stage('Clean') {
+            steps {
+                dir("../Devops-gasto-and-me/gastro-and-me-back") {
+                    bat 'mvn clean install'
+                }
+            }
+        }
         stage('Compile') {
             steps {
                 //dir("../Devops-gasto-and-me/gastro-and-me-back") {
-                    bat 'mvn compile'
+                    sh 'mvn compile'
                // }
             }
         }
