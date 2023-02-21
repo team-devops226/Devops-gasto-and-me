@@ -39,7 +39,7 @@ pipeline {
     
     post {
         always {
-            archiveArtifacts artifacts: '../Devops-gastro-and-me/gastro-and-me-back/target/gastro-and-me-back-1.0.0-SNAPSHOT.jar', onlyIfSuccessful: true
+            archiveArtifacts artifacts: 'Devops-gastro-and-me/gastro-and-me-back/target/gastro-and-me-back-1.0.0-SNAPSHOT.jar', onlyIfSuccessful: true
         }
     }
 }
