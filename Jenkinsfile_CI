@@ -16,10 +16,9 @@ pipeline {
         }
         stage('Compile') {
             steps {
-                //dir("../Devops-gasto-and-me/gastro-and-me-back") 
-                {
+                //dir("../Devops-gasto-and-me/gastro-and-me-back") {
                     sh './mvnw compile'
-                }
+               // }
             }
         }
         stage('Test') {
