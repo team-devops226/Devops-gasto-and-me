@@ -9,9 +9,9 @@ pipeline {
     stages {
         stage('Clean') {
             steps {
-                dir("../Devops-gasto-and-me/gastro-and-me-back") {
+               // dir("../Devops-gasto-and-me/gastro-and-me-back") {
                     sh 'mvn clean'
-                }
+               // }
             }
         }
         stage('Compile') {
