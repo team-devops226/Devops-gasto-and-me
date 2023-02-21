@@ -1,0 +1,37 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-boot-deployment
+  labels:
+    app: gasrtroandme-back
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app:  gasrtroandme-back
+  template:
+    metadata:
+      labels:
+        app:  gasrtroandme-back
+    spec:
+      containers:
+      - name:  gasrtroandme-back
+        image: devops-gasto-and-me-springboot-app
+        ports:
+        - containerPort: 80
+---   
+        #service
+kind: Service  
+apiVersion: v1 
+metadata:
+  name: spring-boot-service
+spec:
+  selector:
+    app: gasrtroandme-back
+  ports:
+  - protocol: TCP
+    port: 80   
+    targetPort: 80   
+    nodePort: 31000
+  type: NodePort    
