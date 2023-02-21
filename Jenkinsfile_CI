@@ -9,28 +9,28 @@ pipeline {
     stages {
         stage('Clean') {
             steps {
-                dir("Devops-gastro-and-me/gastro-and-me-back") {
+                dir("../Devops-gasto-and-me/gastro-and-me-back") {
                     sh 'mvn clean'
                 }
             }
         }
         stage('Compile') {
             steps {
-                dir("Devops-gastro-and-me/gastro-and-me-back") {
+                dir("../Devops-gasto-and-me/gastro-and-me-back") {
                     sh 'mvn compile'
                 }
             }
         }
         stage('Test') {
             steps {
-                dir("Devops-gastro-and-me/gastro-and-me-back") {
+                dir("../Devops-gasto-and-me/gastro-and-me-back") {
                     sh 'mvn test'
                 }
             }
         }
         stage('Package') {
             steps {
-                dir("Devops-gastro-and-me/gastro-and-me-back") {
+                dir("../Devops-gasto-and-me/gastro-and-me-back") {
                     sh 'mvn package'
                 }
             }
