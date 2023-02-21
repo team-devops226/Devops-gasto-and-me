@@ -9,9 +9,9 @@ pipeline {
             }
         }
             //stage 2
-        stage("Get dev_msylla branch") {
+        stage("Get delivery branch") {
             steps {
-                checkout scmGit(branches: [[name: "*/dev_msylla"]], userRemoteConfigs: [[url: "https://github.com/team-devops226/Devops-gasto-and-me.git"]])
+                checkout scmGit(branches: [[name: "*/delivery"]], userRemoteConfigs: [[url: "https://github.com/team-devops226/Devops-gasto-and-me.git"]])
             }
         }
             //stage 3       
