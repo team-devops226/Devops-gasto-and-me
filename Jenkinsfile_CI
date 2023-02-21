@@ -7,18 +7,18 @@ pipeline {
     }
 
     stages {
-        stage('Clean') {
+        /*stage('Clean') {
             steps {
-                dir("/Devops-gasto-and-me/gastro-and-me-back/pom.xml") {
+                dir("/Devops-gasto-and-me/gastro-and-me-back") {
                     bat 'mvn clean'
                 }
             }
-        }
+        }*/
         stage('Compile') {
             steps {
-                //dir("../Devops-gasto-and-me/gastro-and-me-back") {
-                    sh 'mvn compile'
-               // }
+                dir("Devops-gasto-and-me/gastro-and-me-back") {
+                    bat 'mvn compile'
+                }
             }
         }
         stage('Test') {
