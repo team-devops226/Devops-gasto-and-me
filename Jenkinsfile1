@@ -1,0 +1,69 @@
+pipeline {
+    agent any
+    //first stages
+    stages {
+            //stage 1
+        stage ("Send Slack notification") {
+            steps {
+                slackSend message: "Build Started - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+            }
+        }
+            //stage 2
+        stage("Get delivery branch") {
+            steps {
+                checkout scmGit(branches: [[name: "*/delivery"]], userRemoteConfigs: [[url: "https://github.com/team-devops226/Devops-gasto-and-me.git"]])
+            }
+        }
+            //stage 3       
+        stage("Build Back-end Docker Images") {
+            steps {
+                 dir("Devops-gasto-and-me/gastro-and-me-front") {
+                    sh "docker build -t devops-gasto-and-me-springboot-app:1.${env.BUILD_NUMBER} ."
+                    sh "docker tag devops-gasto-and-me-springboot-app:1.${env.BUILD_NUMBER}"
+                }
+            }
+        } 
+        //stage 4     
+        stage("Build Back-front Docker Images") {
+            steps {
+                dir("Devops-gasto-and-me/gastro-and-me-front") {
+                    sh "docker build -t devops-gasto-and-me-angular-app:1.${env.BUILD_NUMBER} ."
+                    sh "docker tag devops-gasto-and-me-angular-app:1.${env.BUILD_NUMBER}"
+                }
+            }
+        }
+         stage("Build database") {
+            steps {
+                sh "docker pull mysql"
+                sh "docker tag mysql gastroandme:1.${env.BUILD_NUMBER}"
+            }
+        }
+        
+        stage("Push images to DockerHub") {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: "docker_token", variable: "access_token")]) {
+                        sh "docker logout"
+                        sh "docker login -u team-devops226 -p ${access_token}"
+
+                        sh "docker push team-devops226/devops-gasto-and-me-springboot-app:1.${env.BUILD_NUMBER}"
+                        sh "docker push team-devops226/devops-gasto-and-me-angular-app.${env.BUILD_NUMBER}"
+                        sh "docker push team-devops226/gastroandme:1.${env.BUILD_NUMBER}"
+
+                        sh "docker logout"
+                    }
+                }
+            }
+        }
+       
+    }
+    //Notification result
+    post {
+        success {
+            slackSend message: "Build deployed successfully - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+        }
+        unsuccessful {
+            slackSend failOnError: true, message: "Build failed  - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+        }
+    }
+}
