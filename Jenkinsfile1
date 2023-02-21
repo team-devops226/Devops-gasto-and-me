@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+    stages {
+        stage ("Send Slack notification") {
+            steps {
+                slackSend message: "Build Started - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+            }
+        }
+        stage("Get dev_msylla branch") {
+            steps {
+                checkout scmGit(branches: [[name: "*/dev_msylla"]], userRemoteConfigs: [[url: "https://github.com/team-devops226/Devops-gasto-and-me.git"]])
+            }
+        }
+        stage("Build application") {
+            steps {
+                sh "echo mogui dokh nice"
+            }
+        }
+       
+    }
+    post {
+        success {
+            slackSend message: "Build deployed successfully - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+        }
+        failure {
+            slackSend failOnError: true, message: "Build failed  - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+        }
+    }
+}
