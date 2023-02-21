@@ -15,12 +15,44 @@ pipeline {
             }
         }
             //stage 3       
-        stage("Build Docker Images") {
+        stage("Build Back-end Docker Images") {
             steps {
                  dir("Devops-gasto-and-me/gastro-and-me-front") {
-                    sh "docker build -t devops-gasto-and-me-angular-app:1.${env.BUILD_NUMBER} ."
+                    sh "docker build -t devops-gasto-and-me-springboot-app:1.${env.BUILD_NUMBER} ."
+                    sh "docker tag devops-gasto-and-me-springboot-app:1.${env.BUILD_NUMBER}"
                 }
-                //sh "docker build -t app_notes:1.${env.BUILD_NUMBER} ./app"
+            }
+        } 
+        //stage 4     
+        stage("Build Back-front Docker Images") {
+            steps {
+                dir("Devops-gasto-and-me/gastro-and-me-front") {
+                    sh "docker build -t devops-gasto-and-me-angular-app:1.${env.BUILD_NUMBER} ."
+                    sh "docker tag devops-gasto-and-me-angular-app:1.${env.BUILD_NUMBER}"
+                }
+            }
+        }
+         stage("Build database") {
+            steps {
+                sh "docker pull mysql"
+                sh "docker tag mysql gastroandme:1.${env.BUILD_NUMBER}"
+            }
+        }
+        
+        stage("Push images to DockerHub") {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: "docker_token", variable: "access_token")]) {
+                        sh "docker logout"
+                        sh "docker login -u team-devops226 -p ${access_token}"
+
+                        sh "docker push team-devops226/devops-gasto-and-me-springboot-app:1.${env.BUILD_NUMBER}"
+                        sh "docker push team-devops226/devops-gasto-and-me-angular-app.${env.BUILD_NUMBER}"
+                        sh "docker push team-devops226/gastroandme:1.${env.BUILD_NUMBER}"
+
+                        sh "docker logout"
+                    }
+                }
             }
         }
        
@@ -30,7 +62,7 @@ pipeline {
         success {
             slackSend message: "Build deployed successfully - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
         }
-        failure {
+        unsuccessful {
             slackSend failOnError: true, message: "Build failed  - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
         }
     }
