@@ -1,23 +1,31 @@
 pipeline {
     agent any
+    //first stages
     stages {
+            //stage 1
         stage ("Send Slack notification") {
             steps {
                 slackSend message: "Build Started - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
             }
         }
+            //stage 2
         stage("Get dev_msylla branch") {
             steps {
                 checkout scmGit(branches: [[name: "*/dev_msylla"]], userRemoteConfigs: [[url: "https://github.com/team-devops226/Devops-gasto-and-me.git"]])
             }
         }
-        stage("Build application") {
+            //stage 3       
+        stage("Build Docker Images") {
             steps {
-                echo "mogui dokh nice"
+                 dir("Devops-gasto-and-me/gasto-and-me-back") {
+                    sh "docker build -t devops-gasto-and-me-angular-app:1.${env.BUILD_NUMBER} ."
+                }
+                //sh "docker build -t app_notes:1.${env.BUILD_NUMBER} ./app"
             }
         }
        
     }
+    //Notification result
     post {
         success {
             slackSend message: "Build deployed successfully - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
