@@ -17,7 +17,7 @@ pipeline {
         stage('Compile') {
             steps {
                 dir("../Devops-gasto-and-me/gastro-and-me-back") {
-                    sh 'mvn compile'
+                    sh './mvnw compile'
                 }
             }
         }
