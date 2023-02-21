@@ -10,14 +10,14 @@ pipeline {
         stage('Clean') {
             steps {
                // dir("../Devops-gasto-and-me/gastro-and-me-back") {
-                    sh 'mvn clean'
+                    sh 'mvn clean install'
                // }
             }
         }
         stage('Compile') {
             steps {
                 //dir("../Devops-gasto-and-me/gastro-and-me-back") {
-                    sh './mvnw compile'
+                    sh 'mvn compile'
                // }
             }
         }
