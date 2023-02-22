@@ -1,0 +1,54 @@
+version: "3.3"
+
+#Définir les services
+services:
+
+  #Base de données MySQL pour l'application
+  mysql-db:
+    image: mysql
+    restart: always
+    container_name: mysql-db
+    #Variable d'environnement pour le mot de passe et la bd par défaut
+    environment:
+      MYSQL_ROOT_PASSWORD: 'passer'
+      MYSQL_DATABASE: 'gastroandme'
+    ports:
+      - 3309:3306 #Transfère le port 3306 exposé sur le conteneur au port 3309 sur la machine hôte
+    volumes:
+      - ./data:/var/lib/mysql
+
+  #Phpmyadmin
+  php-my-admin:
+    image: phpmyadmin
+    restart: always
+    container_name: php-my-admin
+    ports:
+      - 8085:80 #Transfère le port 80 exposé sur le conteneur au port 8081 sur la machine hôte
+    environment:
+      PMA_HOST: mysql-db
+
+  #Application Spring back-end
+  springboot-app:
+    #Le fichier docker dans gastro-and-me-back , construit le pot et fournit l'image docker.
+    build: ./gastro-and-me-back
+    container_name: gasrtroandme-back
+    #Variable d'environnement pour Spring Boot Application
+    environment:
+      MYSQL_HOST: 'mysql-db'
+      MYSQL_USER: 'root'
+      MYSQL_PASSWORD: 'passer'
+      MYSQL_DATABASE: 'gastroandme'
+    ports:
+      - 8089:8080 #Transfère le port 8080 exposé sur le conteneur vers le port 8080 sur la machine hôte
+    links:
+      - mysql-db
+
+  #Application Front-end angular
+  angular-app:
+    #Le fichier docker dans gastroandme-front, construit et fournit l'image docker.
+    build: ./gastro-and-me-front
+    container_name: gastroandme-front
+    ports:
+      - 4200:4200 #Transfère le port 4200 exposé sur le conteneur vers le port 4200 sur la machine hôte
+    links:
+      - springboot-app

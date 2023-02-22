@@ -1,8 +1,10 @@
-# Dockerfile for the back-end
-FROM openjdk:11
-VOLUME /tmp
-EXPOSE 8080
-MAINTAINER Mamadou devopsteam226@gmail.com
-ARG JAR_FILE=target/gastro-and-me-back-0.0.1-SNAPSHOT.jar
-ADD ${JAR_FILE} app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+# Build Stage
+FROM maven:3.6.3-jdk-11-openj9 AS build
+COPY pom.xml /app/
+COPY src /app/src
+RUN mvn -DskipTests -f /app/pom.xml clean package
+
+# Run Stage
+FROM adoptopenjdk/openjdk11:alpine-jre
+COPY --from=build /app/target/gastro-and-me-back*.jar /app/app.jar
+ENTRYPOINT ["java","-jar","/app/app.jar"]

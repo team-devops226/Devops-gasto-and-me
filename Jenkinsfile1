@@ -32,14 +32,15 @@ pipeline {
                 }
             }
         }
+            //stage 5     
          stage("Build database") {
             steps {
                 sh "docker pull mysql"
                 sh "docker tag mysql gastroandme:1.${env.BUILD_NUMBER}"
             }
         }
-        
-        stage("Push images to DockerHub") {
+            //stage 6     
+        stage("Published") {
             steps {
                 script {
                     withCredentials([string(credentialsId: "docker_token", variable: "access_token")]) {
