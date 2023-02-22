@@ -18,8 +18,8 @@ pipeline {
         stage("Build Back-end Docker Images") {
             steps {
                  dir("Devops-gasto-and-me/gastro-and-me-front") {
-                    sh "docker build -t devops-gasto-and-me-springboot-app:1.${env.BUILD_NUMBER} ."
-                    sh "docker tag devops-gasto-and-me-springboot-app:1.${env.BUILD_NUMBER}"
+                    sh "docker build -t app_gasto-and-me-springboot:1.${env.BUILD_NUMBER} ."
+                    sh "docker tag app_gasto-and-me-springboot:1.${env.BUILD_NUMBER}"
                 }
             }
         } 
@@ -27,8 +27,8 @@ pipeline {
         stage("Build Back-front Docker Images") {
             steps {
                 dir("Devops-gasto-and-me/gastro-and-me-front") {
-                    sh "docker build -t devops-gasto-and-me-angular-app:1.${env.BUILD_NUMBER} ."
-                    sh "docker tag devops-gasto-and-me-angular-app:1.${env.BUILD_NUMBER}"
+                    sh "docker build -t app_gasto-and-me-angular:1.${env.BUILD_NUMBER} ."
+                    sh "docker tag app_gasto-and-me-angular:1.${env.BUILD_NUMBER}"
                 }
             }
         }
@@ -36,7 +36,7 @@ pipeline {
          stage("Build database") {
             steps {
                 sh "docker pull mysql"
-                sh "docker tag mysql gastroandme:1.${env.BUILD_NUMBER}"
+                sh "docker tag mysql db_gastroandme:1.${env.BUILD_NUMBER}"
             }
         }
             //stage 6     
@@ -47,9 +47,9 @@ pipeline {
                         sh "docker logout"
                         sh "docker login -u team-devops226 -p ${access_token}"
 
-                        sh "docker push team-devops226/devops-gasto-and-me-springboot-app:1.${env.BUILD_NUMBER}"
-                        sh "docker push team-devops226/devops-gasto-and-me-angular-app.${env.BUILD_NUMBER}"
-                        sh "docker push team-devops226/gastroandme:1.${env.BUILD_NUMBER}"
+                        sh "docker push team-devops226/app_gasto-and-me-springboot:1.${env.BUILD_NUMBER}"
+                        sh "docker push team-devops226/app_gasto-and-me-angular.${env.BUILD_NUMBER}"
+                        sh "docker push team-devops226/db_gastroandme:1.${env.BUILD_NUMBER}"
 
                         sh "docker logout"
                     }
