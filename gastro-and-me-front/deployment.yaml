@@ -6,7 +6,7 @@ metadata:
   labels:
     app: gastroandme-front
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: gastroandme-front
@@ -18,6 +18,13 @@ spec:
       containers:
       - name: gastroandme-front
         image: devops-gasto-and-me-angular-app
+        resources:
+          requests:
+            cpu: "1"
+            memory: "1Gi"
+          limits:
+            cpu: "2"
+            memory: "2Gi"
         ports:
         - containerPort: 80
 ---   
