@@ -1,0 +1,37 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: angular-deployment
+  labels:
+    app: gastroandme-front
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: gastroandme-front
+  template:
+    metadata:
+      labels:
+        app: gastroandme-front
+    spec:
+      containers:
+      - name: gastroandme-front
+        image: devops-gasto-and-me-angular-app
+        ports:
+        - containerPort: 80
+---   
+        #service
+kind: Service  
+apiVersion: v1 
+metadata:
+  name: angular-service
+spec:
+  selector:
+    app: gastro-and-me-front
+  ports:
+  - protocol: TCP
+    port: 80   
+    targetPort: 80   
+    nodePort: 31000
+  type: NodePort    
